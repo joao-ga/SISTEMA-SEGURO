@@ -57,31 +57,44 @@ const clientController = {
     },
     getNextMonth: async (req, res) => {
         try {
-          const id = req.params.id; 
+          const id = req.params.id;
           const clientId = await ClientModel.findById(id);
       
-          if (!clientId ) {
+          if (!clientId) {
             res.status(404).json({ msg: "Cliente não encontrado." });
             return;
           }
-          const dataCriacao = clientId.createdAt;
-          const proximoMes = new Date(dataCriacao);
-          if(proximoMes.getMonth() === 0 ) {
-            proximoMes.setMonth(proximoMes.getMonth() + 1);
-            proximoMes.setMonth(proximoMes.getMonth() - 1);
-            proximoMes.setDate(27);
-          } else {
-            proximoMes.setMonth(proximoMes.getMonth() + 1);
+      
+          const insurances = clientId.insurances;
+      
+          if (!insurances || insurances.length === 0) {
+            res.status(404).json({ msg: "Nenhum seguro encontrado para este cliente." });
+            return;
           }
-
-          const formatedData = formatarDataBrasileira(proximoMes)
-
-          res.json({ formatedData });
+      
+            const proximasDatas = insurances.map((insurance) => {
+            const nameInsurance = insurance.name;
+            const dataCriacao = new Date(insurance.createdAt);
+            const nextMonth = new Date(dataCriacao);
+      
+            if (nextMonth.getMonth() === 0) {
+              nextMonth.setMonth(nextMonth.getMonth() + 1);
+              nextMonth.setMonth(nextMonth.getMonth() - 1);
+              nextMonth.setDate(27);
+            } else {
+              nextMonth.setMonth(nextMonth.getMonth() + 1);
+            }
+            const formatedDate = formatarDataBrasileira(nextMonth);
+      
+            return { nameInsurance, formatedDate };
+          });
+      
+          res.json({ proximasDatas });
         } catch (err) {
           console.error(err);
           res.status(500).json({ msg: "Erro interno do servidor." });
         }
-      },
+      },     
     delete: async(req, res) => {
         try {
             const searchName = req.params.name;
