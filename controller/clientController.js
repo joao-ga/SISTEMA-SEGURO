@@ -1,5 +1,13 @@
 const ClientModel = require("../models/Client");
 
+function formatarDataBrasileira(data) {
+    const dia = String(data.getDate()).padStart(2, '0');
+    const mes = String(data.getMonth() + 1).padStart(2, '0');
+    const ano = data.getFullYear();
+          
+    return `${dia}/${mes}/${ano}`;
+  }
+
 const clientController = {
     create: async(req, res)=> {
         try {
@@ -47,6 +55,33 @@ const clientController = {
             console.log(err)
         }
     },
+    getNextMonth: async (req, res) => {
+        try {
+          const id = req.params.id; 
+          const clientId = await ClientModel.findById(id);
+      
+          if (!clientId ) {
+            res.status(404).json({ msg: "Cliente não encontrado." });
+            return;
+          }
+          const dataCriacao = clientId.createdAt;
+          const proximoMes = new Date(dataCriacao);
+          if(proximoMes.getMonth() === 0 ) {
+            proximoMes.setMonth(proximoMes.getMonth() + 1);
+            proximoMes.setMonth(proximoMes.getMonth() - 1);
+            proximoMes.setDate(27);
+          } else {
+            proximoMes.setMonth(proximoMes.getMonth() + 1);
+          }
+
+          const formatedData = formatarDataBrasileira(proximoMes)
+
+          res.json({ formatedData });
+        } catch (err) {
+          console.error(err);
+          res.status(500).json({ msg: "Erro interno do servidor." });
+        }
+      },
     delete: async(req, res) => {
         try {
             const searchName = req.params.name;

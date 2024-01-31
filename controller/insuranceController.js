@@ -5,7 +5,8 @@ const insuranceController = {
         try{
             const insurance = {
                 name: req.body.name,
-                price: req.body.price
+                price: req.body.price,
+                company: req.body.company
             };
             const response = await InsuranceModel.create(insurance);
             res
@@ -62,7 +63,8 @@ const insuranceController = {
             const id = req.params.id;
             const insurance = {
                 name: req.body.name,
-                price: req.body.price
+                price: req.body.price,
+                company: req.body.company
             };
             const updatedInsurance = await InsuranceModel.findByIdAndUpdate(id, insurance);
             if(!updatedInsurance) {

@@ -11,6 +11,10 @@ const insuranceSchema = new Schema ({
         type: Number,
         required: true
     },
+    comapany: {
+        type: String,
+        required: true
+    }
   },
   { timestamps: true }
 );
