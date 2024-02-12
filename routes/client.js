@@ -8,7 +8,7 @@ router
     .route("/clients")
     .get((req, res) => clientController.getAll(req, res));
 router
-    .route("/clients/inurance/:plate")
+    .route("/clients/:plate")
     .get((req, res) => clientController.get(req, res));
 router
     .route("/clients/:name")

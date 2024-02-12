@@ -73,20 +73,21 @@ const clientController = {
           }
       
             const proximasDatas = insurances.map((insurance) => {
-            const nameInsurance = insurance.name;
-            const dataCriacao = new Date(insurance.createdAt);
-            const nextMonth = new Date(dataCriacao);
-      
-            if (nextMonth.getMonth() === 0) {
-              nextMonth.setMonth(nextMonth.getMonth() + 1);
-              nextMonth.setMonth(nextMonth.getMonth() - 1);
-              nextMonth.setDate(27);
-            } else {
-              nextMonth.setMonth(nextMonth.getMonth() + 1);
-            }
-            const formatedDate = formatarDataBrasileira(nextMonth);
-      
-            return { nameInsurance, formatedDate };
+                const nameInsurance = insurance.name;
+                const dataCriacao = new Date(insurance.createdAt);
+                const nextMonth = new Date(dataCriacao);
+        
+                if (nextMonth.getMonth() === 0) {
+                    nextMonth.setMonth(nextMonth.getMonth() + 1);
+                    nextMonth.setMonth(nextMonth.getMonth() - 1);
+                    nextMonth.setDate(27);
+                } else {
+                    nextMonth.setMonth(nextMonth.getMonth() + 1);
+                }
+
+                const formatedDate = formatarDataBrasileira(nextMonth);
+        
+                return { nameInsurance, formatedDate };
           });
       
           res.json({ proximasDatas });
